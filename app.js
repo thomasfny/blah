@@ -4,7 +4,7 @@ const fs = require('fs');
 const server_address = 'localhost';
 const port = 3000;
 
-let html_stream = fs.createReadStream('./assign3/test.html','utf8');
+let html_stream = fs.createReadStream('./html/search-form.html','utf8');
 
 let server = http.createServer((req,res)=>{
 	console.log(`A new request was made from ${req.connection.remoteAddress} for ${req.url}`);
