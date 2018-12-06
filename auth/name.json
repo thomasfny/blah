@@ -1,0 +1,40 @@
+
+{
+  "artists" : {
+    "href" : "https://api.spotify.com/v1/search?query=Justin%2BBiber&type=artist&offset=0&limit=20",
+    "items" : [ {
+      "external_urls" : {
+        "spotify" : "https://open.spotify.com/artist/3nOSEWWXNumVitrRwkA3c3"
+      },
+      "followers" : {
+        "href" : null,
+        "total" : 834
+      },
+      "genres" : [ ],
+      "href" : "https://api.spotify.com/v1/artists/3nOSEWWXNumVitrRwkA3c3",
+      "id" : "3nOSEWWXNumVitrRwkA3c3",
+      "images" : [ {
+        "height" : 640,
+        "url" : "https://i.scdn.co/image/159fa08f6263495be29fd87f9633501a83be4617",
+        "width" : 640
+      }, {
+        "height" : 300,
+        "url" : "https://i.scdn.co/image/114d25de0d573bc596db14c18059e55461c294fb",
+        "width" : 300
+      }, {
+        "height" : 64,
+        "url" : "https://i.scdn.co/image/b84aa6d8d4a8519a4ed851d4039bb79289d27a39",
+        "width" : 64
+      } ],
+      "name" : "Justin Biber Sierreño",
+      "popularity" : 1,
+      "type" : "artist",
+      "uri" : "spotify:artist:3nOSEWWXNumVitrRwkA3c3"
+    } ],
+    "limit" : 20,
+    "next" : null,
+    "offset" : 0,
+    "previous" : null,
+    "total" : 1
+  }
+}
