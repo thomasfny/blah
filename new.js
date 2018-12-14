@@ -35,18 +35,39 @@ let server = http.createServer((req,res)=>{
 		}		
 		});
 		console.log(post_data);
-		const authentication_req_url='https://accounts.spotify.com/api/token';		
-		let authentication_req=https.request(authentication_req_url,options,authentication_res=>{
-			received_authentication(authentication_res,res,user_input,request_sent_time);
-		});
-		authentication_req.on('error',(e)=>{
-			console.error(e);
-		});
-		authentication_req.write(post_data);
-		console.log("Requesting Token");
-		authentication_req.end();		
+		let cache_valid = false;
+		if(fs.existsSync('./auth/authentication_res.json')){
+			let content=fs.readFileSync('./auth/authentication_res.json','utf-8');
+			let cache_auth=JSON.parse(content);
+			booler=cache_auth;
+			if(new Date(cache_auth.expiration)>Date.now()){
+				cache_valid=true;
+				console.log(cache_valid);
+			}
+			else{
+				console.log('Token Expired');
+			}
+			
+				if(cache_valid){
+				create_serch_req(cache_auth,user_input,request_sent_time);
+			}
+			else{
+				const authentication_req_url='https://accounts.spotify.com/api/token';		
+				let authentication_req=https.request(authentication_req_url,options,authentication_res=>{
+					received_authentication(authentication_res,res,user_input,request_sent_time);
+				});
+				authentication_req.on('error',(e)=>{
+					console.error(e);
+				});
+				authentication_req.write(post_data);
+				console.log("Requesting Token");
+				authentication_req.end();		
+			}
+		
 		
 		res.end(image_stream, 'binary');
+		}
+	
 	}	
 });
 
@@ -69,6 +90,14 @@ function received_authentication(authentication_res,res,user_input,request_sent_
 	authentication_res.on("end", ()=> {
 		let authentication_res_data=JSON.parse(body);
 		console.log(authentication_res_data);
+		let temp=request_sent_time;
+		let tem=Date.now();	
+		tem = new Date(tem);
+		console.log(tem.toString());
+		tem.setHours(tem.getHours()+1);
+		authentication_res_data.expiration= tem.toString();		
+		console.log(authentication_res_data.expiration.toString());			
+		
 		create_cache(authentication_res_data,user_input);
 		create_serch_req(authentication_res_data,res,user_input,request_sent_time);
 	});
@@ -101,11 +130,13 @@ function create_serch_req(authentication_res_data,user_input,request_sent_time){
 		console.log(artists);
 		console.log(data);
 		let items = data["items"];
-		if(items == undefined){
+		if(items[0] === undefined){
 			
 		}
 		else
 		{			
+			console.log(items[0]);
+			
 			let image_s=items[0].images;
 			let image_req=https.get(image_s[0].url,image_res => 
 			{
@@ -116,10 +147,12 @@ function create_serch_req(authentication_res_data,user_input,request_sent_time){
 						}
 					);					
 			}
-		
+				
 		);
+			image_req.on('error',function(err){console.log(err);});
+
 		}
-		image_req.on('error',function(err){console.log(err);});
+		
 	
 		create_cache(authentication_res_data);
 	
